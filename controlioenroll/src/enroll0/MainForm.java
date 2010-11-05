@@ -1,4 +1,4 @@
-package enroll;
+package enroll0;
 
 import java.io.*;
 import java.beans.*;
@@ -96,7 +96,9 @@ public class MainForm extends JFrame
 			if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
 				try {
 					File file = chooser.getSelectedFile();
+                                        System.out.println(file.toString());
 					if (!file.toString().toLowerCase().endsWith(".fpt"))
+                                                
 						file = new File(file.toString() + ".fpt");
 					if (file.exists()) {
 						int choice = JOptionPane.showConfirmDialog(this,

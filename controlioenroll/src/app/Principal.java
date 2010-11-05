@@ -11,21 +11,33 @@
 
 package app;
 
+import com.digitalpersona.onetouch.DPFPTemplate;
 import enroll.EnrollmentForm;
+import enroll.VerificationForm;
 import java.awt.Component;
 import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  *
- * @author Administrador
+ * @author null
  */
 public class Principal extends javax.swing.JFrame {
 
     public JDialog controlLogin;
+
+    public static String TEMPLATE_PROPERTY = "template";
+    private static DPFPTemplate template;
+    public static FileOutputStream stream;
+    public static File fpts;
 
     /** Creates new form Principal */
     public Principal() {
@@ -43,6 +55,16 @@ public class Principal extends javax.swing.JFrame {
         controlLogin.setVisible(true);
          *
          */
+        //para recibir la confirmacion ...
+        this.addPropertyChangeListener(TEMPLATE_PROPERTY, new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                //verify.setEnabled(template != null);
+                //save.setEnabled(template != null);
+                if (evt.getNewValue() == evt.getOldValue()) return;
+                if (template != null)
+                    JOptionPane.showMessageDialog(Principal.this, "The fingerprint template is ready for fingerprint verification.", "Fingerprint Enrollment", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         
     }
 
@@ -177,7 +199,7 @@ public class Principal extends javax.swing.JFrame {
     private void MenuAccion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuAccion1ActionPerformed
 
         EnrollmentForm form = new EnrollmentForm(this);
-	form.setVisible(true);
+	form.setVisible(true);       
 }//GEN-LAST:event_MenuAccion1ActionPerformed
 
     private void MenuAccion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuAccion2ActionPerformed
@@ -210,12 +232,55 @@ public class Principal extends javax.swing.JFrame {
     * @param args the command line arguments
     */
     public static void main(String args[]) {
+        /*
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Principal().setVisible(true);
             }
         });
+        */
+         SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                 new Principal().setVisible(true);
+            }
+        });
     }
+
+
+    public static DPFPTemplate getTemplate() {
+        return template;
+    }
+    public void setTemplate(DPFPTemplate template) {
+        DPFPTemplate old = Principal.template;
+        Principal.template = template;
+        firePropertyChange(TEMPLATE_PROPERTY, old, template);
+    }
+
+    public static boolean saveFingerPrint(int idPersona, int idMano, int idDedo) throws Exception{
+        try{
+            fpts = new File(Config.fptWriterFile);
+            stream = new FileOutputStream(fpts);
+            stream.write(getTemplate().serialize());
+            stream.close();
+
+            //debemos guardar el archivo de la huella en la db
+            //id_persona_id_mano_id_dedo.fpt
+            String file_name = idPersona + "_" + idMano + "_" + idDedo + "fpt";
+            
+
+            Message.showOkMessage(null, "Huella registrada correctamente.");
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();//para la consola
+            Message.showErrorMessage(null, e.getMessage());   //un dialogo con informacion
+            return false;
+        }
+    }
+
+    private static void insertFingerPrint(){
+
+    }
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuAccion1;
