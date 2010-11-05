@@ -11,15 +11,21 @@
 
 package app;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import com.digitalpersona.onetouch.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  *
- * @author Administrador
+ * @author null
  */
 public class RegistroHuella extends javax.swing.JDialog {
 
@@ -148,30 +154,31 @@ public class RegistroHuella extends javax.swing.JDialog {
     private void ButtonRegistrarHuellaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonRegistrarHuellaActionPerformed
         //controlar que haya seleccionado una persona, una mano y una huella
 
-        if(BOXPersona.getSelectedItem() == null){            
-            JOptionPane.showMessageDialog(this, "Se debe seleccionar a una persona", "Error", JOptionPane.ERROR_MESSAGE);
+        if(BOXPersona.getSelectedItem() == null){           
+            Message.showErrorMessage(this, "Se debe seleccionar a una persona");
             BOXPersona.requestFocus();
             return;
         }
         if(BOXMano.getSelectedItem() == null){
-            JOptionPane.showMessageDialog(this, "Se debe seleccionar la mano del dedo de la huella", "Error", JOptionPane.ERROR_MESSAGE);
+            Message.showErrorMessage(this, "Se debe seleccionar la mano del dedo de la huella");
             BOXMano.requestFocus();
             return;
         }
         if(BOXDedo.getSelectedItem() == null){
-            JOptionPane.showMessageDialog(this, "Se debe seleccionar el dedo de la huella", "Error", JOptionPane.ERROR_MESSAGE);
+            Message.showErrorMessage(this, "Se debe seleccionar el dedo de la huella");
             BOXDedo.requestFocus();
             return;
         }
-
         //aqui controlar que todo este seleccionado y realizar el proceso de grabado
-
-        Persona persona = (Persona) BOXPersona.getSelectedItem();
-        int i =JOptionPane.showConfirmDialog(this,"<html><center><font size = 3 color = black>" + persona.getNombre() ,"Confirmar",JOptionPane.YES_NO_OPTION);
-
-        if(i == 0){
-            System.exit(0);
-        }
+        //obtenemos lo que se selecciono
+        Persona persona  = (Persona) BOXPersona.getSelectedItem();
+        Mano mano = (Mano) BOXMano.getSelectedItem();
+        Dedo dedo = (Dedo) BOXDedo.getSelectedItem();
+        try {
+            Principal.saveFingerPrint(persona.getIdPersona(), mano.getIdMano(), dedo.getIdDedo());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }   
 }//GEN-LAST:event_ButtonRegistrarHuellaActionPerformed
 
     private void ButtonCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCancelarActionPerformed
@@ -221,7 +228,7 @@ public class RegistroHuella extends javax.swing.JDialog {
         }finally{
             dbo.DbMySQLConnection.DbDisconnect();
         }
-    }
+    }   
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

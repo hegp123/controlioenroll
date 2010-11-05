@@ -1,4 +1,4 @@
-package enroll;
+package enroll0;
 
 import app.Principal;
 import com.digitalpersona.onetouch.*;
@@ -41,8 +41,8 @@ public class EnrollmentForm extends CaptureForm
 			{
 				case TEMPLATE_STATUS_READY:	// report success and stop capturing
 					stop();
-					//((MainForm)getOwner()).setTemplate(enroller.getTemplate());
-                                        ((Principal)getOwner()).setTemplate(enroller.getTemplate());
+					((MainForm)getOwner()).setTemplate(enroller.getTemplate());
+                                        //((Principal)getOwner()).setTemplate(enroller.getTemplate());
 					setPrompt("Click Close, and then click Fingerprint Verification.");
 					break;
 
@@ -50,8 +50,8 @@ public class EnrollmentForm extends CaptureForm
 					enroller.clear();
 					stop();
 					updateStatus();
-					//((MainForm)getOwner()).setTemplate(null);
-                                        ((Principal)getOwner()).setTemplate(null);
+					((MainForm)getOwner()).setTemplate(null);
+                                        //((Principal)getOwner()).setTemplate(null);
 					JOptionPane.showMessageDialog(EnrollmentForm.this, "The fingerprint template is not valid. Repeat fingerprint enrollment.", "Fingerprint Enrollment", JOptionPane.ERROR_MESSAGE);
 					start();
 					break;

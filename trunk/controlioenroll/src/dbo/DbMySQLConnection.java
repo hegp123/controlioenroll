@@ -10,6 +10,7 @@ package dbo;
  * @author null
  */
 
+import app.Config;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -17,14 +18,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import app.Config.*;
+
 public class DbMySQLConnection {
 
     public static Connection con = null;
 
-    public static final String dbHost = "192.168.3.53";
-    public static final String dbUser = "cristian";
-    public static final String dbName = "control_io";
-    public static final String dbPasswd = "cristian.123";
+    public static final String dbHost = Config.dbHost;
+    public static final String dbUser = Config.dbUser;
+    public static final String dbName = Config.dbName;
+    public static final String dbPasswd = Config.dbPasswd;
+    
     public static final String connectionUrl = "jdbc:myqsl://" + dbHost + "/" + dbName;   //no se por que no funciona si se le pasa directamente al getConnection()
     
     public static Connection DbConnect() {
@@ -58,5 +62,6 @@ public class DbMySQLConnection {
             e.printStackTrace();
             return null;
         }
-    }   
+    }
+    
 }
