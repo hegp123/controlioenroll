@@ -12,6 +12,8 @@
 package app;
 
 import com.digitalpersona.onetouch.DPFPTemplate;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import enroll.EnrollmentForm;
 import enroll.VerificationForm;
 import java.awt.Component;
@@ -19,7 +21,10 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -36,8 +41,7 @@ public class Principal extends javax.swing.JFrame {
 
     public static String TEMPLATE_PROPERTY = "template";
     private static DPFPTemplate template;
-    public static FileOutputStream stream;
-    public static File fpts;
+
 
     /** Creates new form Principal */
     public Principal() {
@@ -254,33 +258,7 @@ public class Principal extends javax.swing.JFrame {
         DPFPTemplate old = Principal.template;
         Principal.template = template;
         firePropertyChange(TEMPLATE_PROPERTY, old, template);
-    }
-
-    public static boolean saveFingerPrint(int idPersona, int idMano, int idDedo) throws Exception{
-        try{
-            fpts = new File(Config.fptWriterFile);
-            stream = new FileOutputStream(fpts);
-            stream.write(getTemplate().serialize());
-            stream.close();
-
-            //debemos guardar el archivo de la huella en la db
-            //id_persona_id_mano_id_dedo.fpt
-            String file_name = idPersona + "_" + idMano + "_" + idDedo + "fpt";
-            
-
-            Message.showOkMessage(null, "Huella registrada correctamente.");
-            return true;
-        }catch(Exception e){
-            e.printStackTrace();//para la consola
-            Message.showErrorMessage(null, e.getMessage());   //un dialogo con informacion
-            return false;
-        }
-    }
-
-    private static void insertFingerPrint(){
-
-    }
-  
+    }       
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuAccion1;
