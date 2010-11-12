@@ -175,7 +175,8 @@ public class RegistroHuella extends javax.swing.JDialog {
         Mano mano = (Mano) BOXMano.getSelectedItem();
         Dedo dedo = (Dedo) BOXDedo.getSelectedItem();
         try {
-            Principal.saveFingerPrint(persona.getIdPersona(), mano.getIdMano(), dedo.getIdDedo());
+            //si la huella para esa persona ya existe, deberia hacer un update
+            FingerPrint.saveFingerPrint(persona.getIdPersona(), mano.getIdMano(), dedo.getIdDedo());
         } catch (Exception ex) {
             ex.printStackTrace();
         }   
