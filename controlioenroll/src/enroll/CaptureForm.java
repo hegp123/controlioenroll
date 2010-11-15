@@ -21,7 +21,7 @@ public class CaptureForm
 	
     public CaptureForm(Frame owner) {
         super (owner, true);
-        setTitle("Fingerprint Enrollment");
+        setTitle("Capturador de huellas");
 
 		setLayout(new BorderLayout());
 		rootPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -34,7 +34,7 @@ public class CaptureForm
 		prompt.setMaximumSize(prompt.getPreferredSize());
 		prompt.setBorder(
 				BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Prompt:"),
+					BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Accion:"),
 					BorderFactory.createLoweredBevelBorder()
 				));
 		log.setColumns(40);
@@ -43,7 +43,7 @@ public class CaptureForm
 		JScrollPane logpane = new JScrollPane(log);
 		logpane.setBorder(
 				BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Status:"),
+					BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0), "Estado actual:"),
 					BorderFactory.createLoweredBevelBorder()
 				));
 		
@@ -51,8 +51,8 @@ public class CaptureForm
 		status.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		status.setFont(UIManager.getFont("Panel.font"));
 		
-		JButton quit = new JButton("Close");
-        quit.addActionListener(new ActionListener() {
+		JButton quit = new JButton("Cerrar");
+            quit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) { setVisible(false); }});
 
 		JPanel right = new JPanel(new BorderLayout());
@@ -94,8 +94,8 @@ public class CaptureForm
 		capturer.addDataListener(new DPFPDataAdapter() {
 			@Override public void dataAcquired(final DPFPDataEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
-					makeReport("The fingerprint sample was captured.");
-					setPrompt("Scan the same fingerprint again.");
+					makeReport("La muestra de la huella ha sido capturada.");
+					setPrompt("Capturar de nuevo una huella");
 					process(e.getSample());
 				}});
 			}
@@ -103,24 +103,24 @@ public class CaptureForm
 		capturer.addReaderStatusListener(new DPFPReaderStatusAdapter() {
 			@Override public void readerConnected(final DPFPReaderStatusEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
-		 			makeReport("The fingerprint reader was connected.");
+		 			makeReport("El lector biometrico ha sido conectado.");
 				}});
 			}
 			@Override public void readerDisconnected(final DPFPReaderStatusEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
-					makeReport("The fingerprint reader was disconnected.");
+					makeReport("El lector biometrico ha sido desconectado");
 				}});
 			}
 		});
 		capturer.addSensorListener(new DPFPSensorAdapter() {
 			@Override public void fingerTouched(final DPFPSensorEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
-					makeReport("The fingerprint reader was touched.");
+					makeReport("El lector biometrico ha sido tocado.");
 				}});
 			}
 			@Override public void fingerGone(final DPFPSensorEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
-					makeReport("The finger was removed from the fingerprint reader.");
+					makeReport("El dedo ha sido quitado del lector biometrico");
 				}});
 			}
 		});
@@ -128,9 +128,9 @@ public class CaptureForm
 			@Override public void onImageQuality(final DPFPImageQualityEvent e) {
 				SwingUtilities.invokeLater(new Runnable() {	public void run() {
 					if (e.getFeedback().equals(DPFPCaptureFeedback.CAPTURE_FEEDBACK_GOOD))
-						makeReport("The quality of the fingerprint sample is good.");
+						makeReport("La calidad de la muestra de la huella es buena.");
 					else
-						makeReport("The quality of the fingerprint sample is poor.");
+						makeReport("La calidad de la muestra de la huella es pobre.");
 				}});
 			}
 		});
@@ -145,7 +145,7 @@ public class CaptureForm
 	protected void start()
 	{
 		capturer.startCapture();
-		setPrompt("Using the fingerprint reader, scan your fingerprint.");
+		setPrompt("Utilice el lectro biometrico para capturar la huella.");
 	}
 
 	protected void stop()
