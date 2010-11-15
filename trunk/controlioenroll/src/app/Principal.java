@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -37,12 +38,14 @@ import javax.swing.SwingUtilities;
  */
 public class Principal extends javax.swing.JFrame {
 
+    //atributos
     public JDialog controlLogin;
-
     public static String TEMPLATE_PROPERTY = "template";
     private static DPFPTemplate template;
-
-
+    EnrollmentForm enrollForm = null;
+    RegistroHuella registroHuella = null;
+    AboutApp about = null;
+    
     /** Creates new form Principal */
     public Principal() {
         initComponents();
@@ -50,17 +53,7 @@ public class Principal extends javax.swing.JFrame {
         this.setIconImage(icono);
         this.setLocationRelativeTo(null);
         this.setExtendedState(MAXIMIZED_BOTH);
-
-        /* control del login
-        controlLogin = new JDialog(this, "titulo", true);
-        controlLogin.setSize(300, 75);
-        controlLogin.setLocationRelativeTo(this);
-        this.setVisible(true);
-        controlLogin.setVisible(true);
-         *
-         */
-
-
+        
         //para recibir la confirmacion ...de la huella creada ya...
         this.addPropertyChangeListener(TEMPLATE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
@@ -68,22 +61,47 @@ public class Principal extends javax.swing.JFrame {
                 //save.setEnabled(template != null);
                 if (evt.getNewValue() == evt.getOldValue()) return;
                 if (template != null){
-                    int confirm = JOptionPane.showConfirmDialog (Principal.this, "La huella ha sido capturada, desea proceder con la registracion de la misma?", "Capturador de huellas", JOptionPane.YES_NO_OPTION /*INFORMATION_MESSAGE*/);
-                    System.out.println(confirm);
-                    if(confirm == 1){
-                        Message.showOkMessage(Principal.this, "continuar con el registro de la huella");
-                    }                    
+                    int confirm = JOptionPane.showConfirmDialog (Principal.this, "La huella ha sido capturada, desea proceder con la registracion de la misma?", "Capturador de huellas", JOptionPane.YES_NO_OPTION /*INFORMATION_MESSAGE*/);                                        
+                    if(confirm == 0){                        
+                        //aqui conectar con el proceso de registracion...
+                        registroHuella = new RegistroHuella(Principal.this, rootPaneCheckingEnabled);
+                        registroHuella.setVisible(true);        //abrimos la interfaz de registro
+                    }else{
+                        enrollForm.dispose();               //cerramos la interfaz                                             
+                    }
                 }
             }
         });        
     }
 
+    /**
+     * Metodo para salir de la aplicacion
+     */
     public void salir(){
         int i = JOptionPane.showConfirmDialog(this,"<html><center><font size = 3 color = black>¿Realmente Desea Salir?","Confirmar",JOptionPane.YES_NO_OPTION);
         if(i == 0){
             System.exit(0);
         }
     }
+
+     /*
+     * Para manejar la lectura de la huella (desde el objeto en memoria)
+     */
+    public static DPFPTemplate getTemplate() {
+        return template;
+    }
+    /**
+     * Para obtener el template leido desde un .fpt
+     * @param template
+     */
+    public void setTemplate(DPFPTemplate template) {
+        DPFPTemplate old = Principal.template;
+        Principal.template = template;
+        firePropertyChange(TEMPLATE_PROPERTY, old, template);
+    }
+
+    /*funciones anhadidas por netbeans*/
+    /*------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -149,7 +167,7 @@ public class Principal extends javax.swing.JFrame {
         jMenu1.add(MenuAccion1);
 
         MenuAccion2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_G, java.awt.event.InputEvent.CTRL_MASK));
-        MenuAccion2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        MenuAccion2.setFont(new java.awt.Font("Arial", 0, 14));
         MenuAccion2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/action.png"))); // NOI18N
         MenuAccion2.setText("Registrar huella");
         MenuAccion2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -183,9 +201,14 @@ public class Principal extends javax.swing.JFrame {
         });
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_D, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setFont(new java.awt.Font("Arial", 0, 14));
+        jMenuItem1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/apply.png"))); // NOI18N
-        jMenuItem1.setText("Developers");
+        jMenuItem1.setText("About...");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem1);
 
         jMenuBar1.add(jMenu2);
@@ -208,14 +231,14 @@ public class Principal extends javax.swing.JFrame {
 
     private void MenuAccion1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuAccion1ActionPerformed
 
-        EnrollmentForm form = new EnrollmentForm(this);
-	form.setVisible(true);       
+        enrollForm = new EnrollmentForm(this);
+	enrollForm.setVisible(true);
 }//GEN-LAST:event_MenuAccion1ActionPerformed
 
     private void MenuAccion2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuAccion2ActionPerformed
         
-        RegistroHuella ventana = new RegistroHuella(this, rootPaneCheckingEnabled);
-        ventana.setVisible(true);
+        RegistroHuella  registroHuella2 = new RegistroHuella(this, rootPaneCheckingEnabled);
+        registroHuella2.setVisible(true);
 }//GEN-LAST:event_MenuAccion2ActionPerformed
 
     private void MenuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuSalirActionPerformed
@@ -233,22 +256,16 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void jMenu2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu2ActionPerformed
-        // TODO add your handling code here:
-        About ventana = new About(this, rootPaneCheckingEnabled);
-        ventana.setVisible(true);
+        
     }//GEN-LAST:event_jMenu2ActionPerformed
 
-    /*
-     * Para manejar la lectura de la huella
-     */
-    public static DPFPTemplate getTemplate() {
-        return template;
-    }
-    public void setTemplate(DPFPTemplate template) {
-        DPFPTemplate old = Principal.template;
-        Principal.template = template;
-        firePropertyChange(TEMPLATE_PROPERTY, old, template);
-    }       
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        about = new AboutApp(this, rootPaneCheckingEnabled);
+        about.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+       
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem MenuAccion1;
