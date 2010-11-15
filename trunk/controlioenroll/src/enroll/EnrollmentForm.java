@@ -17,7 +17,7 @@ public class EnrollmentForm extends CaptureForm
 	@Override protected void init()
 	{
 		super.init();
-		this.setTitle("Fingerprint Enrollment");
+		this.setTitle("Capturador de huellas");
 		updateStatus();
 	}
 
@@ -29,7 +29,7 @@ public class EnrollmentForm extends CaptureForm
 		// Check quality of the sample and add to enroller if it's good
 		if (features != null) try
 		{
-			makeReport("The fingerprint feature set was created.");
+			makeReport("La huella ha sido creada");
 			enroller.addFeatures(features);		// Add feature set to template.
 		}
 		catch (DPFPImageQualityException ex) { }
@@ -43,7 +43,7 @@ public class EnrollmentForm extends CaptureForm
 					stop();
 					//((MainForm)getOwner()).setTemplate(enroller.getTemplate());
                                         ((Principal)getOwner()).setTemplate(enroller.getTemplate());
-					setPrompt("Click Close, and then click Fingerprint Verification.");
+					setPrompt("Haga click en cerrar y luego en verificar huella");
 					break;
 
 				case TEMPLATE_STATUS_FAILED:	// report failure and restart capturing
@@ -52,7 +52,7 @@ public class EnrollmentForm extends CaptureForm
 					updateStatus();
 					//((MainForm)getOwner()).setTemplate(null);
                                         ((Principal)getOwner()).setTemplate(null);
-					JOptionPane.showMessageDialog(EnrollmentForm.this, "The fingerprint template is not valid. Repeat fingerprint enrollment.", "Fingerprint Enrollment", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(EnrollmentForm.this, "La muestra de la huella no es valida. Debe repetir el proceso de captura de huella.", "Capturar Huella", JOptionPane.ERROR_MESSAGE);
 					start();
 					break;
 			}
@@ -62,7 +62,7 @@ public class EnrollmentForm extends CaptureForm
 	private void updateStatus()
 	{
 		// Show number of samples needed.
-		setStatus(String.format("Fingerprint samples needed: %1$s", enroller.getFeaturesNeeded()));
+		setStatus(String.format("Se necesitan  %1$s muestras de la huella: ", enroller.getFeaturesNeeded()));
 	}
 	
 }

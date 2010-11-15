@@ -16,7 +16,7 @@ public class VerificationForm extends CaptureForm
 	@Override protected void init()
 	{
 		super.init();
-		this.setTitle("Fingerprint Enrollment");
+		this.setTitle("Capturador de huellas");
 		updateStatus(0);
 	}
 
@@ -35,16 +35,16 @@ public class VerificationForm extends CaptureForm
                                 //verificator.verify(features, ((Principal)getOwner()).getTemplate());
 			updateStatus(result.getFalseAcceptRate());
 			if (result.isVerified())
-				makeReport("The fingerprint was VERIFIED.");
+				makeReport("La huella ha sido VERIFICADA.");
 			else
-				makeReport("The fingerprint wan NOT VERIFIED.");
+				makeReport("La huella no ha sido VERIFICADA.");
 		}
 	}
 	
 	private void updateStatus(int FAR)
 	{
 		// Show "False accept rate" value
-		setStatus(String.format("False Accept Rate (FAR) = %1$s", FAR));
+		setStatus(String.format("Ratio de aceptacion (False Accept Rate)(FAR) = %1$s", FAR));
 	}
 
 }

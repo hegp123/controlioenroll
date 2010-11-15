@@ -59,17 +59,23 @@ public class Principal extends javax.swing.JFrame {
         controlLogin.setVisible(true);
          *
          */
-        //para recibir la confirmacion ...
+
+
+        //para recibir la confirmacion ...de la huella creada ya...
         this.addPropertyChangeListener(TEMPLATE_PROPERTY, new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 //verify.setEnabled(template != null);
                 //save.setEnabled(template != null);
                 if (evt.getNewValue() == evt.getOldValue()) return;
-                if (template != null)
-                    JOptionPane.showMessageDialog(Principal.this, "The fingerprint template is ready for fingerprint verification.", "Fingerprint Enrollment", JOptionPane.INFORMATION_MESSAGE);
+                if (template != null){
+                    int confirm = JOptionPane.showConfirmDialog (Principal.this, "La huella ha sido capturada, desea proceder con la registracion de la misma?", "Capturador de huellas", JOptionPane.YES_NO_OPTION /*INFORMATION_MESSAGE*/);
+                    System.out.println(confirm);
+                    if(confirm == 1){
+                        Message.showOkMessage(Principal.this, "continuar con el registro de la huella");
+                    }                    
+                }
             }
-        });
-        
+        });        
     }
 
     public void salir(){
@@ -232,25 +238,9 @@ public class Principal extends javax.swing.JFrame {
         ventana.setVisible(true);
     }//GEN-LAST:event_jMenu2ActionPerformed
 
-    /**
-    * @param args the command line arguments
-    */
-    public static void main(String args[]) {
-        /*
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Principal().setVisible(true);
-            }
-        });
-        */
-         SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                 new Principal().setVisible(true);
-            }
-        });
-    }
-
-
+    /*
+     * Para manejar la lectura de la huella
+     */
     public static DPFPTemplate getTemplate() {
         return template;
     }
@@ -271,4 +261,21 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
+     /**
+    * @param args the command line arguments
+    */
+    public static void main(String args[]) {
+        /*
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Principal().setVisible(true);
+            }
+        });
+        */
+         SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                 new Principal().setVisible(true);
+            }
+        });
+    }
 }

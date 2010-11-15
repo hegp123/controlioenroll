@@ -95,10 +95,6 @@ public class FingerPrint {
             e.printStackTrace();//para la consola
             return false;
         }
-    }
-
-    public static void getFingerPrints(){
-
-    }
+    }   
 
 }
