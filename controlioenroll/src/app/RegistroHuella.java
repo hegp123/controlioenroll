@@ -178,6 +178,7 @@ public class RegistroHuella extends javax.swing.JDialog {
             //si la huella para esa persona ya existe, deberia hacer un update
             FingerPrint.saveFingerPrint(persona.getIdPersona(), mano.getIdMano(), dedo.getIdDedo());
         } catch (Exception ex) {
+            Message.showErrorMessage(this, ex.getMessage());
             ex.printStackTrace();
         }   
 }//GEN-LAST:event_ButtonRegistrarHuellaActionPerformed
@@ -225,7 +226,8 @@ public class RegistroHuella extends javax.swing.JDialog {
             }
 
         } catch (SQLException ex) {
-            System.out.println("Exception es:" + " " + ex.getMessage());
+            Message.showErrorMessage(this, ex.getMessage());
+            ex.printStackTrace();
         }finally{
             dbo.DbMySQLConnection.DbDisconnect();
         }
